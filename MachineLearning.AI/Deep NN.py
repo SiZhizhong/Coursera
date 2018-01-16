@@ -1,4 +1,7 @@
 import numpy as np
+import pickle
+from PIL import Image
+
 from matplotlib import pyplot as plt
 
 
@@ -14,6 +17,10 @@ class NN_model(object):
     nomalize_max_num = None
 
     def __init__(self, net_dims):
+        self.net_dims = np.array(net_dims)
+        self.layer_num = self.net_dims.shape[0] - 1  # substract the input layer
+
+    def set_netdims(self, net_dims):
         self.net_dims = np.array(net_dims)
         self.layer_num = self.net_dims.shape[0] - 1  # substract the input layer
 
@@ -86,49 +93,75 @@ class NN_model(object):
 
     def cal_cost(self, Y):
         Al = self.caches["A" + str(self.layer_num)]
+        n = Y.shape[0]
         m = Y.shape[1]
-        cost = -np.sum(np.multiply(Y, np.log(Al)) + np.multiply((1 - Y), np.log(1 - Al))) / m
+        cost = -np.sum(np.multiply(Y, np.log(Al)) + np.multiply((1 - Y), np.log(1 - Al))) / (m * n)
         return cost
 
     def train_net(self, X, Y, X_max, itaration_steps=1000, learning_rate=0.1, print_cost=False):
-        self.net_init(0.01)
+        #self.net_init(0.01)
         for i in range(itaration_steps + 1):
             # forward propagation
             self.foward_propagation(X, X_max)
             self.back_propagation(Y)
             self.update_parameters(learning_rate)
             if print_cost:
-                if (i % 100 == 0):
+                if (i % 10 == 0):
                     cost = self.cal_cost(Y)
                     print("Iter" + str(i) + " Cost:", cost)
 
     def predict(self, X):
-        A=self.foward_propagation(X,self.nomalize_max_num)
-        predict_Y=(A>0.5)*1
+        A = self.foward_propagation(X, self.nomalize_max_num)
+        predict_Y = (A > 0.5) * 1
         return predict_Y
 
     def accuracy(self, X, Y):
-        pass
+        predict_Y = self.predict(X)
+        m = np.array(Y).shape[1]
+        correct = np.all(predict_Y == Y, axis=0, keepdims=True) * 1
+        accuracy = correct.sum() / m
+        return accuracy
 
-    def save_model(self):
-        pass
+    def save_model(self,model_name):
+        save_data = dict()
+        save_data["net_dims"] = self.net_dims
+        save_data["layer_num"] = self.layer_num
+        save_data["caches"] = self.caches
+        save_data["grad_caches"] = self.grad_caches
+        save_data["nomalize_max_num"] = self.nomalize_max_num
+        save_data["parameters"] = self.parameters
+        file = open(model_name, "wb")
+        pickle.dump(save_data, file)
 
-    def load_model(self, path=None):
-        if path == None:
-            path = current_path
-        pass
+    def load_model(self, model_name):
+        file = open(model_name, "rb")
+        save_data = pickle.load(file)
+        self.net_dims = save_data["net_dims"]
+        self.layer_num = save_data["layer_num"]
+        self.caches = save_data["caches"]
+        self.grad_caches = save_data["grad_caches"]
+        self.nomalize_max_num = save_data["nomalize_max_num"]
+        self.parameters = save_data["parameters"]
 
 
 if __name__ == "__main__":
-    ones = np.ones((10, 50))
-    zeros = np.zeros((10, 50))
-    X = np.column_stack((ones, zeros))
-    ones = np.ones((1, 26))
-    zeros = np.zeros((1, 74))
-    Y = np.column_stack((ones, zeros))
+    dogs=np.load("dogdata.npy")
+    tigers=np.load("tigerdata.npy")
+    dogs_train=dogs[:,:600]
+    dogs_test=dogs[:,600:]
+    tigers_train=tigers[:,:600]
+    tigers_test=tigers[:,600:]
 
-    my_nn = NN_model([10, 5, 2, 1])
-    my_nn.net_init(0.01)
-    my_nn.train_net(X, Y, 1, 10000, 0.2, True)
+    #dog is one
+    train_X=np.column_stack((dogs_train,tigers_train))
+    train_Y=np.column_stack((np.ones((1,dogs_train.shape[1])),np.zeros((1,tigers_train.shape[1]))))
 
-    print(np.sum(my_nn.predict(X)))
+    test_X=np.column_stack((dogs_test,tigers_test))
+    test_Y=np.column_stack((np.ones((1,dogs_test.shape[1])),np.zeros((1,tigers_test.shape[1]))))
+
+    print(train_X.shape,train_Y.shape,test_X.shape,test_Y.shape)
+    my_nn = NN_model([50*50, 500, 10, 1])
+    my_nn.load_model("isdog")
+    my_nn.train_net(train_X,train_Y,255,700,0.02,True)
+    my_nn.save_model("isdog")
+    print(my_nn.accuracy(train_X,train_Y),my_nn.accuracy(test_X,test_Y))
