@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!-- saved from url=(0062)http://coursera.cs.princeton.edu/algs4/assignments/queues.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Programming Assignment 2: Deques and Randomized Queues</title>
+</head>
+<body data-feedly-mini="yes">
+
+<h2>Programming Assignment 2: Deques and Randomized Queues</h2>
+<p>
+
+Write a generic data type for a deque and a randomized queue.
+The goal of this assignment is to implement elementary data structures
+using arrays and linked lists, and to introduce you to generics and
+iterators.
+
+
+</p><p>
+<b>Dequeue.</b>
+A <em>double-ended queue</em> or <em>deque</em> (pronounced “deck”)
+is a generalization of a 
+stack and a queue that supports adding and removing items 
+from either the front or the back of the data structure.
+Create a generic data type <code>Deque</code> that implements the following API:
+
+</p><blockquote>
+<pre><b>public class Deque&lt;Item&gt; implements Iterable&lt;Item&gt; {</b>
+<b>   public Deque()                           </b><font color="gray">// construct an empty deque</font>
+<b>   public boolean isEmpty()                 </b><font color="gray">// is the deque empty?</font>
+<b>   public int size()                        </b><font color="gray">// return the number of items on the deque</font>
+<b>   public void addFirst(Item item)          </b><font color="gray">// add the item to the front</font>
+<b>   public void addLast(Item item)           </b><font color="gray">// add the item to the end</font>
+<b>   public Item removeFirst()                </b><font color="gray">// remove and return the item from the front</font>
+<b>   public Item removeLast()                 </b><font color="gray">// remove and return the item from the end</font>
+<b>   public Iterator&lt;Item&gt; iterator()         </b><font color="gray">// return an iterator over items in order from front to end</font>
+<b>   public static void main(String[] args)   </b><font color="gray">// unit testing (optional)</font>
+<b>}</b>
+</pre>
+</blockquote>
+
+<p><em>Corner cases.&nbsp;</em>
+Throw the specified exception for the following corner cases:
+</p><ul>
+<li>Throw a <code>java.lang.IllegalArgumentException</code>
+if the client calls either <code>addFirst()</code> or <code>addLast()</code>
+with a <code>null</code> argument.
+</li><li>
+Throw a <code>java.util.NoSuchElementException</code>
+if the client calls either <code>removeFirst()</code> or <code>removeLast</code>
+when the deque is empty.
+</li><li>
+Throw a <code>java.util.NoSuchElementException</code> if the client calls the <code>next()</code>
+method in the iterator when there are no more items to return.
+</li><li>
+Throw a <code>java.lang.UnsupportedOperationException</code> if the client calls
+the <code>remove()</code> method in the iterator.
+</li></ul>
+
+<p><em>Performance requirements.&nbsp;</em>
+Your deque implementation must support each deque operation (including construction)
+in <em>constant worst-case time</em>.
+A deque containing <em>n</em> items must use at most 48<em>n</em> + 192 bytes of memory
+and use space proportional to the number of items <em>currently</em> in 
+the deque.
+Additionally, your iterator implementation must support
+each operation (including construction) in <em>constant worst-case time</em>.
+
+</p><p><b>Randomized queue.</b>
+A <em>randomized queue</em> is similar to a stack or queue, except that
+the item removed is chosen uniformly at random from items in
+the data structure.
+Create a generic data type <code>RandomizedQueue</code>
+that implements the following API:
+
+</p><blockquote>
+<pre><b>public class RandomizedQueue&lt;Item&gt; implements Iterable&lt;Item&gt; {</b>
+<b>   public RandomizedQueue()                 </b><font color="gray">// construct an empty randomized queue</font>
+<b>   public boolean isEmpty()                 </b><font color="gray">// is the randomized queue empty?</font>
+<b>   public int size()                        </b><font color="gray">// return the number of items on the randomized queue</font>
+<b>   public void enqueue(Item item)           </b><font color="gray">// add the item</font>
+<b>   public Item dequeue()                    </b><font color="gray">// remove and return a random item</font>
+<b>   public Item sample()                     </b><font color="gray">// return a random item (but do not remove it)</font>
+<b>   public Iterator&lt;Item&gt; iterator()         </b><font color="gray">// return an independent iterator over items in random order</font>
+<b>   public static void main(String[] args)   </b><font color="gray">// unit testing (optional)</font>
+<b>}</b>
+</pre>
+</blockquote>
+
+<p><em>Iterator</em>.&nbsp;
+Each iterator must return the items in uniformly random order.
+The order of two or more iterators to the same randomized queue must be
+<em>mutually independent</em>; each iterator must maintain its own random order.
+
+</p><p><em>Corner cases.&nbsp;</em>
+Throw the specified exception for the following corner cases:
+</p><ul>
+<li>
+Throw a <code>java.lang.IllegalArgumentException</code> if the client calls
+<code>enqueue()</code> with a <code>null</code> argument.
+</li><li>
+Throw a <code>java.util.NoSuchElementException</code>
+if the client calls either <code>sample()</code> or 
+<code>dequeue()</code> when the randomized queue is empty.
+</li><li>
+Throw a <code>java.util.NoSuchElementException</code> if the client calls the <code>next()</code>
+method in the iterator when there are no more items to return.
+</li><li>
+Throw a <code>java.lang.UnsupportedOperationException</code> if the client calls
+the <code>remove()</code> method in the iterator.
+</li></ul>
+
+<p><em>Performance requirements.&nbsp;</em>
+Your randomized queue implementation must support each randomized queue operation   
+(besides creating an iterator) in <em>constant amortized time</em>.
+That is, any sequence of <em>m</em> randomized queue operations (starting from
+an empty queue) must take at most <em>cm</em> steps in the worst case,
+for some constant <em>c</em>.
+A randomized queue containing <em>n</em> items must use at most
+48<em>n</em> + 192 bytes of memory.
+Additionally, your iterator implementation must support
+operations <code>next()</code> and <code>hasNext()</code> in <em>constant worst-case time</em>;
+and construction in <em>linear time</em>; you may (and will need to) use a
+linear amount of extra memory per iterator.
+
+
+</p><p>
+<b>Client.</b>
+Write a client program <code>Permutation.java</code> that takes an integer <em>k</em> as
+a command-line argument; reads in a sequence of strings from standard input
+using <code>StdIn.readString()</code>; and prints exactly <em>k</em> of them,
+uniformly at random.
+Print each item from the sequence at most once.
+
+</p><blockquote>
+<pre>% <b>more <a href="http://coursera.cs.princeton.edu/algs4/testing/queues/distinct.txt">distinct.txt</a></b>                        % <b>more <a href="http://coursera.cs.princeton.edu/algs4/testing/queues/duplicates.txt">duplicates.txt</a></b>
+A B C D E F G H I                          AA BB BB BB BB BB CC CC
+
+% <b>java-algs4 Permutation 3 &lt; distinct.txt</b>   % <b>java-algs4 Permutation 8 &lt; duplicates.txt</b>
+C                                               BB
+G                                               AA
+A                                               BB
+                                                CC
+% <b>java-algs4 Permutation 3 &lt; distinct.txt</b>       BB
+E                                               BB
+F                                               CC
+G                                               BB
+</pre>
+</blockquote>
+
+
+Your program must implement the following API:
+
+<blockquote>
+<pre><b>
+public class Permutation {
+   public static void main(String[] args)
+}
+</b>
+</pre>
+</blockquote>
+
+<p><em>Command-line input.&nbsp;</em>
+You may assume that 0 ≤ <em>k</em> ≤ <em>n</em>,
+where <em>n</em> is the number of string on standard input. 
+
+
+</p><p><em>Performance requirements.&nbsp;</em>
+The running time of <code>Permutation</code> must be linear in the size of the input.
+<!-- not necessarily linear in n because the strings could be very long -->
+You may use only a constant amount of memory plus either 
+one <code>Deque</code> or <code>RandomizedQueue</code> object of maximum size at most <em>n</em>.
+(For an extra challenge, use only one <code>Deque</code> or <code>RandomizedQueue</code>
+object of maximum size at most <em>k</em>.)
+
+
+</p><p>
+<b>Deliverables.</b>
+Submit the programs <code>RandomizedQueue.java</code>, <code>Deque.java</code>, and
+<code>Permutation.java</code>.
+Your submission may not call library functions except those in
+<a href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/StdIn.html"><code>StdIn</code></a>,
+<a href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/StdOut.html"><code>StdOut</code></a>,
+<a href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/StdRandom.html"><code>StdRandom</code></a>,
+<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/package-summary.html"><code>java.lang</code></a>,
+<a href="http://docs.oracle.com/javase/8/docs/api/java/util/Iterator.html"><code>java.util.Iterator</code></a>,
+and
+<a href="http://docs.oracle.com/javase/8/docs/api/java/util/NoSuchElementException.html"><code>java.util.NoSuchElementException</code></a>.
+
+In particular, do not use either 
+<a href="http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html"><code>java.util.LinkedList</code></a>
+or
+<a href="http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html"><code>java.util.ArrayList</code></a>.
+
+
+</p><p>
+
+</p><address><small>
+This assignment was developed by Kevin Wayne.
+<br>Copyright © 2005.
+</small>
+</address>
+
+
+
+<span style="border-radius: 3px; text-indent: 20px; width: auto; padding: 0px 4px 0px 0px; text-align: center; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 11px; line-height: 20px; font-family: &quot;Helvetica Neue&quot;, Helvetica, sans-serif; color: rgb(255, 255, 255); background: url(&quot;data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMzBweCIgd2lkdGg9IjMwcHgiIHZpZXdCb3g9Ii0xIC0xIDMxIDMxIj48Zz48cGF0aCBkPSJNMjkuNDQ5LDE0LjY2MiBDMjkuNDQ5LDIyLjcyMiAyMi44NjgsMjkuMjU2IDE0Ljc1LDI5LjI1NiBDNi42MzIsMjkuMjU2IDAuMDUxLDIyLjcyMiAwLjA1MSwxNC42NjIgQzAuMDUxLDYuNjAxIDYuNjMyLDAuMDY3IDE0Ljc1LDAuMDY3IEMyMi44NjgsMC4wNjcgMjkuNDQ5LDYuNjAxIDI5LjQ0OSwxNC42NjIiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxIj48L3BhdGg+PHBhdGggZD0iTTE0LjczMywxLjY4NiBDNy41MTYsMS42ODYgMS42NjUsNy40OTUgMS42NjUsMTQuNjYyIEMxLjY2NSwyMC4xNTkgNS4xMDksMjQuODU0IDkuOTcsMjYuNzQ0IEM5Ljg1NiwyNS43MTggOS43NTMsMjQuMTQzIDEwLjAxNiwyMy4wMjIgQzEwLjI1MywyMi4wMSAxMS41NDgsMTYuNTcyIDExLjU0OCwxNi41NzIgQzExLjU0OCwxNi41NzIgMTEuMTU3LDE1Ljc5NSAxMS4xNTcsMTQuNjQ2IEMxMS4xNTcsMTIuODQyIDEyLjIxMSwxMS40OTUgMTMuNTIyLDExLjQ5NSBDMTQuNjM3LDExLjQ5NSAxNS4xNzUsMTIuMzI2IDE1LjE3NSwxMy4zMjMgQzE1LjE3NSwxNC40MzYgMTQuNDYyLDE2LjEgMTQuMDkzLDE3LjY0MyBDMTMuNzg1LDE4LjkzNSAxNC43NDUsMTkuOTg4IDE2LjAyOCwxOS45ODggQzE4LjM1MSwxOS45ODggMjAuMTM2LDE3LjU1NiAyMC4xMzYsMTQuMDQ2IEMyMC4xMzYsMTAuOTM5IDE3Ljg4OCw4Ljc2NyAxNC42NzgsOC43NjcgQzEwLjk1OSw4Ljc2NyA4Ljc3NywxMS41MzYgOC43NzcsMTQuMzk4IEM4Ljc3NywxNS41MTMgOS4yMSwxNi43MDkgOS43NDksMTcuMzU5IEM5Ljg1NiwxNy40ODggOS44NzIsMTcuNiA5Ljg0LDE3LjczMSBDOS43NDEsMTguMTQxIDkuNTIsMTkuMDIzIDkuNDc3LDE5LjIwMyBDOS40MiwxOS40NCA5LjI4OCwxOS40OTEgOS4wNCwxOS4zNzYgQzcuNDA4LDE4LjYyMiA2LjM4NywxNi4yNTIgNi4zODcsMTQuMzQ5IEM2LjM4NywxMC4yNTYgOS4zODMsNi40OTcgMTUuMDIyLDYuNDk3IEMxOS41NTUsNi40OTcgMjMuMDc4LDkuNzA1IDIzLjA3OCwxMy45OTEgQzIzLjA3OCwxOC40NjMgMjAuMjM5LDIyLjA2MiAxNi4yOTcsMjIuMDYyIEMxNC45NzMsMjIuMDYyIDEzLjcyOCwyMS4zNzkgMTMuMzAyLDIwLjU3MiBDMTMuMzAyLDIwLjU3MiAxMi42NDcsMjMuMDUgMTIuNDg4LDIzLjY1NyBDMTIuMTkzLDI0Ljc4NCAxMS4zOTYsMjYuMTk2IDEwLjg2MywyNy4wNTggQzEyLjA4NiwyNy40MzQgMTMuMzg2LDI3LjYzNyAxNC43MzMsMjcuNjM3IEMyMS45NSwyNy42MzcgMjcuODAxLDIxLjgyOCAyNy44MDEsMTQuNjYyIEMyNy44MDEsNy40OTUgMjEuOTUsMS42ODYgMTQuNzMzLDEuNjg2IiBmaWxsPSIjYmQwODFjIj48L3BhdGg+PC9nPjwvc3ZnPg==&quot;) 3px 50% / 14px 14px no-repeat rgb(189, 8, 28); position: absolute; opacity: 1; z-index: 8675309; display: none; cursor: pointer; border: none; -webkit-font-smoothing: antialiased;">Save</span><span style="width: 24px; height: 24px; background: url(&quot;data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pjxzdmcgd2lkdGg9IjI0cHgiIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAwIDI0IDI0IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxkZWZzPjxtYXNrIGlkPSJtIj48cmVjdCBmaWxsPSIjZmZmIiB4PSIwIiB5PSIwIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHJ4PSI2IiByeT0iNiIvPjxyZWN0IGZpbGw9IiMwMDAiIHg9IjUiIHk9IjUiIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgcng9IjEiIHJ5PSIxIi8+PHJlY3QgZmlsbD0iIzAwMCIgeD0iMTAiIHk9IjAiIHdpZHRoPSI0IiBoZWlnaHQ9IjI0Ii8+PHJlY3QgZmlsbD0iIzAwMCIgeD0iMCIgeT0iMTAiIHdpZHRoPSIyNCIgaGVpZ2h0PSI0Ii8+PC9tYXNrPjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiNmZmYiIG1hc2s9InVybCgjbSkiLz48L3N2Zz4=&quot;) 50% 50% / 14px 14px no-repeat rgba(0, 0, 0, 0.4); position: absolute; opacity: 1; z-index: 8675309; display: none; cursor: pointer; border: none; border-radius: 12px;"></span><div id="feedly-mini" title="feedly Mini tookit"></div></body></html>

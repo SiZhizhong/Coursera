@@ -144,6 +144,7 @@ class NN_model(object):
         self.parameters = save_data["parameters"]
 
 
+
 if __name__ == "__main__":
     dogs=np.load("dogdata.npy")
     tigers=np.load("tigerdata.npy")
