@@ -1,0 +1,51 @@
+import java.util.Arrays;
+
+public class FastCollinearPoints {
+	private int num=0;
+	private LineSegment[] ls;
+	private LineSegment[] temp;
+	private int capacity=20;
+   public FastCollinearPoints(Point[] points) {
+	   // finds all line segments containing 4 or more points
+	   if(points==null) throw new IllegalArgumentException();
+	   for(int i=0;i<points.length;i++) {
+		   if(points[i]==null) throw new IllegalArgumentException();
+	   }
+	   
+	   Point [] ysort=new Point[points.length];
+	   for (int i=0;i<ysort.length;i++) ysort[i]=points[i];
+	   Arrays.sort(ysort);
+	   for(int i=0;i<points.length;i++) {
+		   for (int k=0;k<ysort.length;k++) points[k]=ysort[k];
+		   Arrays.sort(points,points[i].slopeOrder());
+		   int same=1;
+		   for(int j=i+2;j<points.length;j++) {
+			   if (points[0].slopeTo(points[j-1])==points[0].slopeTo(points[j])) {
+				   same++;
+			   }
+			   else {
+				   if(same>=3&&points[0].compareTo(points[j-same])<=-1) {
+					   num++;
+					   if(num>capacity) {
+							capacity+=capacity;
+							temp=new LineSegment[capacity];
+							for(int k=0;k<ls.length;k++)
+								temp[k]=ls[k];
+							ls=temp;
+							temp=null;
+						}
+					   ls[num-1]=new LineSegment(points[0],points[j-1]);
+					   
+				   }
+				   same=1;
+			   }
+		   }
+	   }
+   }
+   public int numberOfSegments() {
+	   // the number of line segments
+   }
+   public LineSegment[] segments() {
+	   // the line segments
+   }
+}

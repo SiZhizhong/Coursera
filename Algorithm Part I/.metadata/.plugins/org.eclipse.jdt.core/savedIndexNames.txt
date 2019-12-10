@@ -1,0 +1,6 @@
+INDEX VERSION 1.131+D:\MyCodes\Cousera\Algorithm Part 1\.metadata\.plugins\org.eclipse.jdt.core
+2783195863.index
+3538092609.index
+1283954658.index
+3582903896.index
+998287220.index

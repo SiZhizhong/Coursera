@@ -1,0 +1,106 @@
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
+public class RandomizedQueue<Item> implements Iterable<Item> {
+	private Item [] list;
+	private int capacity=20;
+	private int length=0;
+	
+
+    // construct an empty randomized queue
+    public RandomizedQueue() {
+    	list=(Item[]) new Object[capacity];
+    }
+
+    // is the randomized queue empty?
+    public boolean isEmpty() {
+    	return length==0;
+    }
+
+    // return the number of items on the randomized queue
+    public int size() {
+    	return length;
+    	
+    }
+    
+
+    // add the item
+    public void enqueue(Item item) {
+    	if(item==null) throw new IllegalArgumentException();
+    	if(length<capacity)
+    		list[length++]=item;
+    	else {
+    		capacity*=2;
+    		Item [] templist=(Item[]) new Object[capacity];
+    		for(int i=0;i<length;i++) templist[i]=list[i];
+    		list=templist;
+    		templist=null;
+    		list[length++]=item;
+    		
+    	}
+    	
+    }
+
+    // remove and return a random item
+    public Item dequeue() {
+    	if (isEmpty()) throw new NoSuchElementException();
+    	int remove=StdRandom.uniform(length);
+    	Item temp=list[remove];
+    	list[remove]=list[length-1];
+    	list[--length]=null;
+    	if (length<=capacity/4&&capacity>20) {
+    		capacity/=2;
+    		Item [] templist=(Item[]) new Object[capacity];
+    		for(int i=0;i<length;i++) templist[i]=list[i];
+    		list=templist;
+    		templist=null;
+    	}
+    	return temp;
+    }
+
+    // return a random item (but do not remove it)
+    public Item sample() {
+    	if (isEmpty()) throw new NoSuchElementException();
+    	int temp=StdRandom.uniform(length);
+    	return list[temp];
+    	
+    }
+
+    // return an independent iterator over items in random order
+    public Iterator<Item> iterator(){
+    	return new RUIterator();
+    	
+    }
+    private class RUIterator implements Iterator<Item>{
+    	private int [] order=StdRandom.permutation(length);
+    	private int index=0;
+
+		@Override
+		public boolean hasNext() {
+			// TODO Auto-generated method stub
+			return index<length;
+		}
+
+		@Override
+		public Item next() {
+			if(index>=length) throw new NoSuchElementException ();
+			// TODO Auto-generated method stub
+			return list[order[index++]];
+		}
+    	
+    }
+
+    // unit testing (required)
+    public static void main(String[] args) {
+    	RandomizedQueue<Integer> rq=new RandomizedQueue<Integer>();
+    	for(int i=0;i<100;i++)
+    		rq.enqueue(i);
+    	for (Integer item : rq) StdOut.println(item);
+ 
+    	
+    	
+    }
+
+}

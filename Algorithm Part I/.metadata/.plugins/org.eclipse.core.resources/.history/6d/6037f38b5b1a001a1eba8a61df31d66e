@@ -1,0 +1,68 @@
+import java.util.Comparator;
+
+import edu.princeton.cs.algs4.MinPQ;
+public class Solver {
+	private final MinPQ pq;
+	private final Hammingcomparator compare_ham;
+	private final Manhattancomparator compare_man;
+
+    // find a solution to the initial board (using the A* algorithm)
+    public Solver(Board initial) {
+    	if(initial==null) throw new IllegalArgumentException();
+    	compare_ham=new Hammingcomparator();
+    	compare_man=new Manhattancomparator();
+    	pq=new MinPQ(compare_ham);
+    	pq.insert(initial);
+    	Board current=null,pre=null;
+    	boolean solved=false;
+    	while(!solved&&!pq.isEmpty()) {
+    		current=(Board) pq.delMin();
+    		for(Board nei: current.neighbors()) {
+    			if(nei.isGoal()) solved=true;
+    			else{
+    				if(!nei.equals(pre)) pq.insert(nei);
+    				pre=current;	
+    			}
+    		}
+    	}
+    
+    }
+	private class Hammingcomparator implements Comparator<Board>{
+
+		@Override
+		public int compare(Board o1, Board o2) {
+			// TODO Auto-generated method stub
+			return o1.hamming()-o2.hamming();
+		}
+		
+	}
+	
+	private class Manhattancomparator implements Comparator<Board>{
+		
+		@Override
+		public int compare(Board o1, Board o2) {
+			return o1.manhattan()-o2.manhattan();
+		}
+	}
+
+    // is the initial board solvable? (see below)
+    public boolean isSolvable() {
+    	return false;
+    }
+
+    // min number of moves to solve initial board
+    public int moves() {
+    	return 1;
+    }
+
+    // sequence of boards in a shortest solution
+    public Iterable<Board> solution(){
+    	return null;
+    }
+
+    // test client (see below) 
+    public static void main(String[] args) {
+    	
+    }
+
+}

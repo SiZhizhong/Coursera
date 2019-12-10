@@ -1,0 +1,102 @@
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+
+import java.lang.IllegalArgumentException;
+
+
+public class Percolation {
+    private boolean[][] sitemap;
+    private WeightedQuickUnionUF qu;
+    private int n;
+    private int openSiteNum;
+
+    /**
+     * check whether row and col is validated
+     *
+     * @param row the row of the site
+     * @param col the col of the site
+     * 
+     * first convert row and col from 1 to n to 0 to n-1
+     */
+    private boolean validate(int row, int col) {
+        if (row >= 0 && row < this.n && col >= 0 && col < this.n)
+            return true;
+        else throw (new IllegalArgumentException());
+    }
+
+    /**
+     * get the corresponding index of WeightedQuckUnion, the first two are virtual site
+     */
+    private int findQuIndex(int row, int col) {
+        return (row) * this.n + col + 2;
+    }
+
+    /**
+     * construst method.
+     */
+    public Percolation(int n) {
+    	if(n<=0)
+    		throw new IllegalArgumentException();
+    	else
+    	{
+            this.n = n;
+    	}
+        this.sitemap = new boolean[n][n];
+
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                this.sitemap[i][j] = false;//0 represent blocked
+        this.qu = new WeightedQuickUnionUF(n * n + 2);// add two virtual site
+        //connect all first row to 0 and all last row to 1
+        for (int i = 0; i < this.n; i++) {
+            qu.union(0, this.findQuIndex(0, i));
+            qu.union(1, this.findQuIndex(this.n - 1, i));
+        }
+        this.openSiteNum = 0;
+
+    }
+
+    public void open(int row, int col) {
+    	row=row-1;
+    	col=col-1;
+        if (this.validate(row, col) && this.sitemap[row][col] == false) {
+            this.sitemap[row][col] = true;
+            this.openSiteNum += 1;
+            if (row > 0 && this.sitemap[row - 1][col] == true)
+                this.qu.union(this.findQuIndex(row - 1, col), this.findQuIndex(row, col));
+            if (row < n - 1 && this.sitemap[row + 1][col] == true)
+                this.qu.union(this.findQuIndex(row + 1, col), this.findQuIndex(row, col));
+            if (col > 0 && this.sitemap[row][col - 1] == true)
+                this.qu.union(this.findQuIndex(row, col - 1), this.findQuIndex(row, col));
+            if (col < n - 1 && this.sitemap[row][col + 1] == true)
+                this.qu.union(this.findQuIndex(row, col + 1), this.findQuIndex(row, col));
+        }
+
+    }
+
+    public boolean isOpen(int row, int col) {
+    	row=row-1;
+    	col=col-1;
+        if (this.validate(row, col))
+            return this.sitemap[row][col];
+        else return false;
+    }
+
+    public boolean isFull(int row, int col) {
+    	row=row-1;
+    	col=col-1;
+        if (this.validate(row, col))
+            return this.qu.connected(this.findQuIndex(row, col), 0);
+        else throw (new IllegalArgumentException());
+
+    }
+
+    public int numberOfOpenSites() {
+        return this.openSiteNum;
+    }
+
+    public boolean percolates() {
+        return this.qu.connected(0, 1);
+    }
+
+
+}

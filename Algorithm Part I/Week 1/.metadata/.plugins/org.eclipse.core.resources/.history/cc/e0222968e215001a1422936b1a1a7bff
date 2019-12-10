@@ -1,0 +1,25 @@
+package week1;
+import java.io.*;
+
+
+public class Test {
+	public static void main(String[] args)
+	{
+		int N =10;
+		int [][] unions= {{4,3},{3,8},{6,5},{9,4},{2,1},{8,9},{5,0},{7,2},{6,1},{1,0},{6,7}};
+		
+		QuickFindUF uf=new QuickFindUF(N);
+		for (int i=0;i<unions.length;i++)
+		{
+			int q=unions[i][0];
+			int p=unions[i][1];
+			if (!uf.connected(q, p))
+			{
+				uf.union(q, p);
+				System.out.println(p+" "+q);
+			}
+		}
+		System.out.print(uf.connected(4, 3));
+	}
+
+}

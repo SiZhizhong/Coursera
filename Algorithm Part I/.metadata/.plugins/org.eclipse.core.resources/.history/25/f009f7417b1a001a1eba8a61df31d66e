@@ -1,0 +1,101 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.In;
+public class Solver {
+	private final MinPQ<Board> pq;
+
+	private int minstep;
+	private final List<SearchNode> sol;
+	private boolean solved=false;
+
+    // find a solution to the initial board (using the A* algorithm)
+    public Solver(Board initial) {
+    	if(initial==null) throw new IllegalArgumentException();
+
+    	sol=new ArrayList<SearchNode>();
+    	//pq=new MinPQ(compare_man);
+    	pq.insert(new SearchNode(0, initial));
+    	Board current=null,pre=null;
+    	solved=false;
+    	int preMan=initial.manhattan();
+    	while(!pq.isEmpty()) {
+    		current=(Board) pq.delMin();
+    		if(current.manhattan()>preMan) break;
+    		preMan=current.manhattan();
+    		sol.add(current);
+    		minstep++;
+    		if(current.isGoal()) {
+    			solved=true;
+    			break;
+    		}
+    		for(Board nei: current.neighbors()) {
+    			if(!nei.equals(pre)) pq.insert(nei);
+    			pre=current;	
+    		}
+    	}
+    
+    }
+    
+    private class SearchNode implements Comparable<SearchNode>{
+    	private int mov=0;
+    	private Board b;
+    	public SearchNode(int mov,Board b) {
+			// TODO Auto-generated constructor stub
+    		this.mov=0;
+    		this.b=b;
+		}
+
+		@Override
+		public int compareTo(SearchNode arg0) {
+			// TODO Auto-generated method stub
+			return this.b.manhattan()-arg0.b.manhattan();
+		}
+    	
+    }
+	
+
+    // is the initial board solvable? (see below)
+    public boolean isSolvable() {
+    	return solved;
+    }
+
+    // min number of moves to solve initial board
+    public int moves() {
+    	return minstep;
+    }
+
+    // sequence of boards in a shortest solution
+    public Iterable<Board> solution(){
+    	return sol;
+    }
+
+    // test client (see below) 
+    public static void main(String[] args) {
+
+        // create initial board from file
+        In in = new In(args[0]);
+        int n = in.readInt();
+        int[][] tiles = new int[n][n];
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                tiles[i][j] = in.readInt();
+        Board initial = new Board(tiles);
+
+        // solve the puzzle
+        Solver solver = new Solver(initial);
+
+        // print solution to standard output
+        if (!solver.isSolvable())
+            StdOut.println("No solution possible");
+        else {
+            StdOut.println("Minimum number of moves = " + solver.moves());
+            for (Board board : solver.solution())
+                StdOut.println(board);
+        }
+    }
+
+}

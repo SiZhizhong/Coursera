@@ -1,0 +1,83 @@
+import edu.princeton.cs.algs4.Stopwatch;
+import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.StdOut;
+public class Sorters {
+	
+	public void insertionSort(int[] list) {
+		int temp;
+		for (int i=0;i<list.length-1;i++) {
+			int minindex=i;
+			for(int j=i+1;j<list.length;j++) {
+				if (list[j]<list[minindex]) minindex=j; 
+			}
+			temp=list[i];
+			list[i]=list[minindex];
+			list[minindex]=temp;
+			
+		}
+	}
+	
+	public void selectionSort(int[] list) {
+		int temp;
+		for(int i=1;i<list.length;i++) {
+			int j=i;
+			while(j>0 && list[j]<list[j-1]) {
+				temp=list[j-1];
+				list[j-1]=list[j];
+				list[j]=temp;
+				j--;
+			}
+		}
+	}
+	
+	public void shellSort(int[] list) {
+		int length=list.length;
+		int h=1;
+		int temp;
+		while(h<length/3) h=h*3+1;
+		while(h>0) {
+			for(int i=h;i<list.length;i++) {
+				int j=i;
+				while(j-h>=0&&list[j]<list[j-h]) {
+					temp=list[j-h];
+					list[j-h]=list[j];
+					list[j]=temp;
+					j-=h;
+				}
+			}
+			h=h/3;
+		}
+	}
+	
+	public void shuffling(int[] list) {
+		int random;
+		int temp;
+		for (int i=1;i<list.length;i++) {
+			random=StdRandom.uniform(i+1);
+			temp=list[i];
+			list[i]=list[random];
+			list[random]=temp;
+		}
+			
+		
+	}
+	public static void main(String[]args) {
+		int [] length= {1000,10000,50000,100000,150000,200000,250000,300000,400000,500000,600000,700000};
+		int N;
+		double time;
+		for(int i=0;i<length.length;i++) {
+			N=length[i];
+			int [] list=new int[N];
+			for(int j=0;j<N;j++) list[j]=StdRandom.uniform(2*N);
+			Sorters sort=new Sorters();
+			Stopwatch sw=new Stopwatch();
+			sort.shellSort(list);
+			time=sw.elapsedTime();
+			StdOut.println(time);
+			
+		}
+		
+		
+	}
+
+}
