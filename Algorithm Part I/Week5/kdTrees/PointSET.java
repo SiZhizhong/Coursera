@@ -5,6 +5,8 @@ import java.util.TreeSet;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 
 /*
  * public class Point2D implements Comparable<Point2D> {
@@ -77,14 +79,52 @@ public class PointSET {
 	public Iterable<Point2D> range(RectHV rect){
 	   // all points that are inside the rectangle (or on the boundary)
 		List<Point2D> inpoints=new ArrayList<Point2D>();
-	   return null;
+		for(Point2D point :points) {
+			if(rect.contains(point)) inpoints.add(point);
+		}
+		return inpoints;
 	}
 	public Point2D nearest(Point2D p) {
 	   // a nearest neighbor in the set to point p; null if the set is empty 
-	   return null;
+		if(points.isEmpty()) return null;
+		double distance=Double.MAX_VALUE;
+		double temp;
+		Point2D nearpoint=null;
+		for(Point2D point:points) {
+			temp=point.distanceTo(p);
+			if(temp<distance) {
+				distance=temp;
+				nearpoint=point;
+			}
+		
+		}
+		return nearpoint;
 	}
 
 	public static void main(String[] args) {
 	   // unit testing of the methods (optional) 
+		PointSET pset=new PointSET();
+		for(int i=0;i<100;i++)
+			pset.insert(new Point2D(i, i));
+		
+		//Draw
+		 StdDraw.enableDoubleBuffering();
+		 StdDraw.setXscale(0, 100);
+		 StdDraw.setYscale(0, 100);
+		 pset.draw();
+		 
+		 RectHV rect=new RectHV(10, 10, 40, 40);
+		 Point2D p=new Point2D(50, 50.1);
+		 rect.draw();
+		 StdDraw.show();
+		 
+		 for(Point2D ptemp:pset.range(rect)) {
+			 StdOut.println(ptemp.x());
+			 StdOut.println(ptemp.y());
+		 }
+		 StdOut.println(pset.nearest(p).x());
+		 StdOut.println(pset.nearest(p).y());
+		
+		
 	}
 }

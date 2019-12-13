@@ -1,6 +1,25 @@
-INDEX VERSION 1.131+D:\MyCodes\Cousera\Algorithm Part 1\.metadata\.plugins\org.eclipse.jdt.core
-2783195863.index
+INDEX VERSION 1.131+D:\GitHub\Coursera\Algorithm Part I\.metadata\.plugins\org.eclipse.jdt.core
+3992023341.index
+1024690606.index
+1791325406.index
+655479941.index
 3538092609.index
-1283954658.index
-3582903896.index
+2783195863.index
+105843373.index
+3448055696.index
+2166398209.index
+3296572347.index
+1475589598.index
+2409360468.index
+1878829836.index
+2163137126.index
+4271462342.index
+1760775110.index
+2866950790.index
 998287220.index
+3050438387.index
+3789309859.index
+1283954658.index
+3652811988.index
+1195392129.index
+3582903896.index
